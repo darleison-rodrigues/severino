@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "severino"
+version = "0.1.0"
+authors = [
+  { name="Your Name", email="your.email@example.com" },
+]
+description = "A CLI for ML monitoring assistance using Gemma and Gemini."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License", # Or your chosen license
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "click",
+    "google-generativeai",
+    "llama-cpp-python[cuda]", # Ensure CUDA toolkit is installed for this
+    "python-dotenv",
+    "psutil", # For resource monitoring
+]
+
+[project.urls]
+"Homepage" = "https://github.com/your-repo/severino" # Replace with your actual repo
+"Bug Tracker" = "https://github.com/your-repo/severino/issues" # Replace with your actual repo
+
+[project.scripts]
+severino = "main:cli" # This makes 'severino' command available after pip install
+
+[tool.setuptools.packages.find]
+where = ["src"] # Search for packages in the 'src' directory

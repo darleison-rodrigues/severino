@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+.venv/
+venv/
+
+# Virtualenv
+bin/
+include/
+lib/
+lib64/
+local/
+share/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# Data and Models
+data/models/*.gguf
+data/cache/
+
+# Environment variables
+.env
