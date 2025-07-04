@@ -70,6 +70,84 @@ def gemini(prompt: str, max_tokens: int):
         click.echo("Gemini API request failed or was cancelled.")
         logger.warning("Gemini command did not return a response.")
 
+@cli.command()
+@click.option('--model', type=click.Choice(['gemma', 'gemini'], case_sensitive=False), default='gemini',
+              help='Choose the LLM model for the chat session (gemma or gemini).')
+@click.option('--max-tokens', default=512, type=int,
+              help='Maximum number of tokens for model generation in chat.')
+@click.option('--temperature', default=0.7, type=float,
+              help='Creativity of the Gemma model (0.0-1.0). Higher values are more creative.')
+def chat(model: str, max_tokens: int, temperature: float):
+    """
+    Starts an interactive chat session with the chosen LLM.
+    Type 'exit' or 'quit' to end the session.
+    """
+    logger.info(f"Starting interactive chat session with {model} model.")
+    print(f"Starting interactive chat with {model}. Type 'exit' or 'quit' to end.")
+
+    chat_history = []
+    gemini_chat_session = None
+
+    if model == 'gemini':
+        from llm_inference.gemini_api import start_gemini_chat_session
+        gemini_chat_session = start_gemini_chat_session()
+        print("Gemini chat session started.")
+    elif model == 'gemma':
+        try:
+            load_gemma_model() # Ensure Gemma model is loaded once
+            print("Gemma model loaded for chat.")
+        except FileNotFoundError as e:
+            print(f"\nError: {e}")
+            print("Please ensure the Gemma GGUF model is downloaded to 'data/models/'. Cannot start Gemma chat.")
+            logger.error(f"Gemma chat failed: Model file not found. {e}")
+            return
+        except Exception as e:
+            print(f"\nAn unexpected error occurred during Gemma model loading: {e}")
+            logger.error(f"Gemma chat failed unexpectedly during model loading: {e}", exc_info=True)
+            return
+
+    while True:
+        try:
+            user_input = input("\nYou: ").strip()
+            if user_input.lower() in ['exit', 'quit']:
+                print("Ending chat session.")
+                logger.info("Chat session ended by user.")
+                break
+
+            if not user_input:
+                continue
+
+            response = None
+            if model == 'gemini':
+                response = generate_content_with_quota_check(
+                    user_input,
+                    max_tokens=max_tokens,
+                    chat_session=gemini_chat_session
+                )
+            elif model == 'gemma':
+                response = run_gemma_inference(
+                    user_input,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    chat_history=chat_history # Pass history for Gemma
+                )
+            
+            if response:
+                print(f"\n{model.capitalize()}: {response}")
+                # Add both user input and model response to history for Gemma
+                if model == 'gemma':
+                    chat_history.append(f"<start_of_turn>user\n{user_input}<end_of_turn>\n<start_of_turn>model\n{response}<end_of_turn>")
+            else:
+                print(f"No response from {model}.")
+
+        except KeyboardInterrupt:
+            print("\nEnding chat session.")
+            logger.info("Chat session ended by KeyboardInterrupt.")
+            break
+        except Exception as e:
+            print(f"\nAn error occurred during chat: {e}")
+            logger.error(f"Chat session error: {e}", exc_info=True)
+
 # You can add more commands here as your CLI grows, for example:
 # @cli.command()
 # @click.argument('log_file', type=click.Path(exists=True))

@@ -4,9 +4,11 @@ from contextlib import contextmanager
 from llama_cpp import Llama, LlamaGrammar
 from config.settings import GEMMA_MODEL_PATH, N_GPU_LAYERS, N_CTX, N_BATCH
 from config.logging_config import logger
+from utils.text_processor import TextProcessor
 
 # Global instance of the Gemma LLM to ensure it's loaded only once.
 _gemma_llm_instance = None
+_text_processor_instance = TextProcessor() # Initialize TextProcessor globally
 
 @contextmanager
 def suppress_stdout_stderr():
@@ -51,7 +53,7 @@ def load_gemma_model():
 
     return _gemma_llm_instance
 
-def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float = 0.7) -> str:
+def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float = 0.7, chat_history: list[str] = None) -> str:
     """
     Runs inference with the locally loaded Gemma model.
 
@@ -60,6 +62,7 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
         max_tokens (int): The maximum number of tokens to generate in the response.
         temperature (float): Controls the creativity/randomness of the output.
                              Higher values (e.g., 0.8) are more creative, lower (e.g., 0.2) are more deterministic.
+        chat_history (list[str]): Optional. A list of previous conversational turns.
 
     Returns:
         str: The generated text from the Gemma model, or an error message.
@@ -73,7 +76,16 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
         # This format helps the model understand its role in a conversation.
         # <bos> (beginning of sequence) is often added automatically by llama.cpp.
         # <start_of_turn> and <end_of_turn> are Gemma-specific tokens.
-        formatted_prompt = f"<start_of_turn>user\n{prompt}<end_of_turn>\n<start_of_turn>model\n"
+        
+        processed_prompt = _text_processor_instance.process_text(prompt)
+
+        full_prompt_parts = []
+        if chat_history:
+            for turn in chat_history:
+                full_prompt_parts.append(turn)
+        
+        full_prompt_parts.append(f"<start_of_turn>user\n{processed_prompt}<end_of_turn>\n<start_of_turn>model\n")
+        formatted_prompt = "".join(full_prompt_parts)
 
         logger.info(f"Running Gemma inference for prompt (max_tokens={max_tokens}, temp={temperature})...")
         with suppress_stdout_stderr():

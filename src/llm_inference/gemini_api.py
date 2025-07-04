@@ -6,6 +6,7 @@ from config.settings import (
     GEMINI_COST_WARNING_THRESHOLD_USD
 )
 from config.logging_config import logger
+from utils.text_processor import TextProcessor
 import json # For parsing structured responses if needed
 
 # Configure the Google Generative AI client with your API key.
@@ -15,6 +16,14 @@ genai.configure(api_key=GEMINI_API_KEY)
 # Initialize the GenerativeModel with the specified model name.
 # This model instance will be used for all content generation requests.
 _gemini_model_instance = genai.GenerativeModel(GEMINI_MODEL_NAME)
+_text_processor_instance = TextProcessor() # Initialize TextProcessor globally
+
+def start_gemini_chat_session():
+    """
+    Starts a new chat session with the configured Gemini model.
+    """
+    logger.info("Starting new Gemini chat session.")
+    return _gemini_model_instance.start_chat()
 
 def estimate_gemini_cost(input_tokens: int, output_tokens: int) -> float:
     """
@@ -53,7 +62,7 @@ def estimate_gemini_cost(input_tokens: int, output_tokens: int) -> float:
            (output_tokens / 1_000_000) * output_price_per_million
     return cost
 
-def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_OUTPUT_TOKENS) -> str | None:
+def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_OUTPUT_TOKENS, chat_session=None) -> str | None:
     """
     Generates content using the Gemini API with a pre-flight token count and cost estimate.
     Warns the user if the estimated cost exceeds a predefined threshold.
@@ -61,6 +70,7 @@ def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_
     Args:
         prompt (str): The input prompt for the Gemini API.
         max_tokens (int): The maximum number of tokens to generate in the response.
+        chat_session: Optional. A Gemini chat session object for conversational turns.
 
     Returns:
         str | None: The generated text from the Gemini API, or None if the request
@@ -68,9 +78,15 @@ def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_
     """
     logger.info(f"Preparing Gemini API request for prompt (max_tokens={max_tokens})...")
     try:
+        processed_prompt = _text_processor_instance.process_text(prompt)
+
         # 1. Estimate Input Tokens
         # The count_tokens method is free and doesn't count against inference quota.
-        count_response = _gemini_model_instance.count_tokens(prompt)
+        if chat_session:
+            # For chat sessions, count tokens on the entire history + new message
+            count_response = chat_session.model.count_tokens(chat_session.history + [processed_prompt])
+        else:
+            count_response = _gemini_model_instance.count_tokens(processed_prompt)
         input_token_count = count_response.total_tokens
         logger.info(f"Estimated input tokens: {input_token_count}")
 
@@ -97,12 +113,20 @@ def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_
 
         # 4. Make the API Call
         logger.info("Sending request to Gemini API...")
-        response = _gemini_model_instance.generate_content(
-            prompt,
-            generation_config={
-                "max_output_tokens": max_tokens
-            }
-        )
+        if chat_session:
+            response = chat_session.send_message(
+                processed_prompt,
+                generation_config={
+                    "max_output_tokens": max_tokens
+                }
+            )
+        else:
+            response = _gemini_model_instance.generate_content(
+                processed_prompt,
+                generation_config={
+                    "max_output_tokens": max_tokens
+                }
+            )
 
         # 5. Process Response
         # Access the text from the response.

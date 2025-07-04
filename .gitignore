@@ -28,3 +28,4 @@ data/cache/
 
 # Environment variables
 .env
+/knowledge

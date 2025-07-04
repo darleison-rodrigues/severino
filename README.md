@@ -1,99 +1,82 @@
-Severino Command-Line Interface
-This document delineates the operational parameters and structural composition of the Severino Command-Line Interface (CLI), an instrumental utility engineered to facilitate diverse computational tasks through the judicious application of both localized Large Language Models (LLMs) and cloud-based LLM Application Programming Interfaces (APIs). The overarching objective of this apparatus is to furnish expeditious, on-premise inferential capabilities for routine computational demands, leveraging the Gemma model, concurrently providing access to high-fidelity, intricate generative functionalities via the Gemini API, with an integrated mechanism for fiscal oversight.
+# Severino CLI: Intelligent Command-Line Interface
 
-Salient Features
-Local Gemma Inference: The system is endowed with the capacity to execute inferential processes utilizing Gemma models directly upon the Graphics Processing Unit (GPU) of the host system, thereby ensuring rapid, private, and unremunerated computational operations.
+Severino is an intelligent command-line interface designed to empower developers with advanced AI capabilities, streamline workflows, and interact seamlessly with local tools and cloud services. It aims to provide a robust, secure, and intuitive experience for managing complex software engineering tasks.
 
-Gemini API Integration: Access to the robust Gemini API is afforded for the purpose of advanced content generation, complemented by configurable alerts pertaining to potential financial expenditures.
+## Functional Features
 
-Modular Architectural Design: The underlying architecture is characterized by a modular composition, which significantly enhances the facility of extension and the efficacy of maintenance protocols.
+The Severino CLI is built around a modular architecture, enabling powerful interactions through natural language and direct commands.
 
-Implementation Procedure
-The following sequential steps are requisite for the successful deployment of this project:
+### 1. Core CLI Capabilities
 
-Repository Acquisition:
-The source code repository is to be cloned from its designated Uniform Resource Locator (URL) and the working directory subsequently altered to the newly created project root.
+*   **Intelligent Input Processing:** Understands and parses user commands, including natural language prompts, to determine intent and orchestrate actions.
+*   **Conversational Context Management:** Maintains conversation history to provide context-aware responses and support long-running sessions.
+*   **Dynamic Tool Execution:** Executes a wide range of tools, both local and remote, based on user requests or AI-driven decisions.
+*   **Secure Operations:** Implements a robust mechanism for user confirmation before executing sensitive commands that might modify the system or data.
+*   **Extensible Architecture:** Designed for easy integration of new tools and services.
 
-git clone https://github.com/your-repo/severino.git # The placeholder URL is to be substituted with the actual repository URL.
-cd severino
+### 2. AI Integration
 
-Python Virtual Environment Establishment:
-A dedicated Python virtual environment is to be instantiated, followed by its activation to ensure isolation of project dependencies.
+*   **Gemini API Client:** Communicates with the Google Gemini API for advanced language understanding, generation, and tool call orchestration.
+*   **Local LLM Inference (Gemma):** Supports local execution of large language models (e.g., Gemma GGUF models) for offline capabilities and reduced cloud dependency.
+*   **Prompt Construction & Management:** Dynamically builds and refines prompts for LLMs, incorporating conversational history and tool definitions.
+*   **Text Processing & Feature Engineering:** Cleans and normalizes text inputs for consistent and high-quality LLM interactions, applying rules for robust data handling.
 
-python -m venv .venv
-source .venv/bin/activate # For Microsoft Windows operating systems, the command is .venv\Scripts\activate.
+### 3. Tool Management System
 
-Dependency Installation:
-All requisite software dependencies, as enumerated within the requirements.txt file, are to be installed.
+The CLI features a `ToolManager` responsible for registering, discovering, and orchestrating the execution of various tools.
 
-pip install -r requirements.txt
+*   **Tool Registration:** Tools are defined with clear specifications (name, description, parameters, expected returns, side effects, security context).
+*   **Dynamic Discovery:** New tools can be registered at runtime, allowing for flexible expansion of CLI capabilities.
+*   **Intelligent Tool Selection & Chaining:** The AI can select the most appropriate tool(s) for a given task and chain multiple tool calls to achieve complex goals.
+*   **Tool Adapters:** Generic adapters enable interaction with diverse environments, including local shell commands and remote APIs.
 
-GPU (CUDA) Prerequisite: It is imperative that the NVIDIA CUDA Toolkit be installed upon the host system to enable llama-cpp-python[cuda] to harness the computational capabilities of the GPU. Consultation of NVIDIA's official documentation for installation guidelines is advised.
+### 4. Cloud & RAG Integration Points
 
-Gemma Model Procurement:
-A Gemma GGUF model, specifically gemma-7b-it.Q4_K_M.gguf or an equivalent quantized variant, is to be downloaded from a recognized repository on Hugging Face (e.g., TheBloke/Gemma-7B-it-GGUF or unsloth/gemma-3-7b-it-GGUF). The acquired .gguf file must then be deposited within the severino/data/models/ directory.
+Severino is designed to integrate with robust cloud backends and secure knowledge management systems.
 
-Gemini API Key Configuration:
-A Gemini API key is to be procured from Google AI Studio. Subsequently, a file designated .env is to be created within the root directory of severino/, into which the aforementioned API key is to be inscribed.
+*   **Cloudflare Workers Backend:** The CLI can interact with Cloudflare Workers-based services for API key validation, business logic, data ingestion, and RAG orchestration.
+*   **Secure RAG System:** Facilitates querying and integrating responses from Retrieval Augmented Generation (RAG) systems, ensuring context-aware and privacy-preserving access to knowledge bases.
 
-GEMINI_API_KEY="YOUR_ACTUAL_GEMINI_API_KEY_HERE"
+## Command-Line Interface (CLI) Commands
 
-Crucial Directive: The .env file must, under no circumstances, be committed to version control. Its inclusion in .gitignore serves to enforce this directive.
+The Severino CLI provides a set of commands for direct interaction and leverages natural language processing for more intuitive control.
 
-Operational Directives
-Command execution is performed by invoking python src/main.py <command> [arguments].
+### General Interaction
 
-Local Gemma Inference
-To initiate local inferential processes utilizing the Gemma model, the following command syntax is employed:
+*   `severino <your_natural_language_prompt>`: The primary way to interact. Describe what you want to achieve, and Severino will interpret your request, potentially executing tools or providing information.
+    *   **Example:** `severino "Summarize the main points of the file at /docs/project_plan.md"`
+    *   **Example:** `severino "What is the current status of the 'core package foundations' task?"`
 
-python src/main.py gemma "Write a short Python function for quicksort."
-python src/main.py gemma "Explain the concept of recursion." --max-tokens 100 --temperature 0.5
+### Direct Tool Execution
 
-Gemini API Generation
-For the generation of content via the Gemini API, the subsequent command structure is utilized:
+For specific, direct actions, you can invoke tools explicitly.
 
-python src/main.py gemini "Draft a compelling marketing email for a new productivity app."
-python src/main.py gemini "Summarize the key findings from the latest climate change report." --max-tokens 2000
+*   `severino read <file_path>`: Reads and displays the content of a specified file.
+    *   **Example:** `severino read /home/user/config.json`
+*   `severino shell <command>`: Executes a shell command. **Requires user confirmation for potentially destructive commands.**
+    *   **Example:** `severino shell "ls -la"`
+    *   **Example:** `severino shell "git status"`
 
-Project Hierarchical Organization
-The project's directory structure is systematically arranged as follows:
+### Configuration Management
 
-severino/
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── setup.py
-├── pyproject.toml
-├── config/
-│   ├── __init__.py
-│   ├── settings.py
-│   └── logging_config.py
-├── data/
-│   ├── models/
-│   └── cache/
-├── src/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── llm_inference/
-│   │   ├── __init__.py
-│   │   ├── gemma_local.py
-│   │   └── gemini_api.py
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── helpers.py
-│   │   └── token_counter.py
-│   └── cli/
-│       ├── __init__.py
-│       ├── commands.py
-│       └── validation.py
-└── tests/
-    ├── __init__.py
-    ├── test_gemma_local.py
-    ├── test_gemini_api.py
-    └── test_cli_commands.py
+Manage Severino's settings and API keys.
 
-Contribution Protocols
-Contributions to this project are welcomed. Prospective contributors are encouraged to submit issues or propose pull requests.
+*   `severino config set <key> <value>`: Sets a configuration value (e.g., API keys, default model).
+    *   **Example:** `severino config set gemini_api_key YOUR_API_KEY`
+*   `severino config show`: Displays the current configuration settings.
 
-Licensing Framework
-This project operates under an open-source licensing framework. (The specification of a particular license, such as MIT or Apache 2.0, is under consideration.)
+### Session & History Management
+
+Control conversational context.
+
+*   `severino chat`: Enters an interactive chat mode for continuous conversation.
+*   `severino history show [limit]`: Displays recent conversational history.
+*   `severino history clear`: Clears the current session's conversation history.
+
+### Diagnostics & Health Checks
+
+*   `severino self-diagnose`: Checks the health and connectivity of internal components and integrated external services. Provides actionable insights for troubleshooting.
+
+## Getting Started
+
+To begin using Severino, ensure you have Python installed. You can then install the necessary dependencies and configure your API keys. Detailed installation instructions will be provided in the full documentation.
