@@ -69,7 +69,11 @@ Manage Severino's settings and API keys.
 
 Control conversational context.
 
-*   `severino chat`: Enters an interactive chat mode for continuous conversation.
+*   `severino chat`: Enters an interactive chat mode for continuous conversation. This mode features:
+    *   **Rich Terminal Output:** Colored text for user input, agent responses, and system messages.
+    *   **Loading Spinners:** Visual feedback while the LLM is processing.
+    *   **Emoji Responses:** Agent responses are prepended with a distinctive emoji (e.g., :hatching-egg:).
+    *   **Explicit Gemini Authorization:** Use `/use gemini` within the chat to enable Gemini API calls for the session.
 *   `severino history show [limit]`: Displays recent conversational history.
 *   `severino history clear`: Clears the current session's conversation history.
 

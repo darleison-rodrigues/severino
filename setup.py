@@ -3,19 +3,25 @@ from setuptools import setup, find_packages
 setup(
     name='severino',
     version='0.1.0',
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
+    # Explicitly list top-level packages
+    packages=['src', 'packages'],
+    # Map where these packages are located
+    package_dir={
+        'src': 'src',
+        'packages': 'packages'
+    },
     include_package_data=True,
     install_requires=[
         'click',
         'google-generativeai',
-        'llama-cpp-python[cuda]', # Ensure CUDA toolkit is installed for this
+        'llama-cpp-python[cuda]',
         'python-dotenv',
-        'psutil', # For resource monitoring
+        'psutil',
+        'rich',
     ],
     entry_points={
         'console_scripts': [
-            'severino=main:cli', # This makes 'severino' command available after pip install
+            'severino=src.main:cli', # Corrected entry point
         ],
     },
     author='Your Name',
@@ -23,10 +29,10 @@ setup(
     description='A CLI for ML monitoring assistance using Gemma and Gemini.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/your-repo/severino', # Replace with your actual repo
+    url='https://github.com/your-repo/severino',
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License', # Or your chosen license
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',

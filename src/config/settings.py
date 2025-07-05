@@ -55,7 +55,7 @@ N_CTX = 8192
 N_BATCH = 512
 
 # --- Logging Settings ---
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper() # Default to INFO, can be overridden by env var
+LOG_LEVEL = os.getenv("LOG_LEVEL", "CRITICAL").upper() # Default to CRITICAL to suppress most logs
 LOG_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     "logs", "severino.log"

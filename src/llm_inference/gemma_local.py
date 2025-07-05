@@ -30,11 +30,8 @@ def load_gemma_model():
     global _gemma_llm_instance
     if _gemma_llm_instance is None:
         if not os.path.exists(GEMMA_MODEL_PATH):
-            logger.error(f"Gemma model file not found at: {GEMMA_MODEL_PATH}. Please download it.")
             raise FileNotFoundError(f"Gemma model not found at: {GEMMA_MODEL_PATH}. Please download it.")
 
-        logger.info(f"Attempting to load Gemma model from: {GEMMA_MODEL_PATH}")
-        logger.info(f"Configuring for GPU: {N_GPU_LAYERS} layers, Context: {N_CTX}, Batch: {N_BATCH}")
         try:
             with suppress_stdout_stderr():
                 _gemma_llm_instance = Llama(
@@ -44,10 +41,7 @@ def load_gemma_model():
                     n_batch=N_BATCH,           # Batch size for prompt processing
                     verbose=False              # Set to True for more detailed loading output from llama.cpp
                 )
-            logger.info("Gemma model loaded successfully.")
         except Exception as e:
-            logger.error(f"Error loading Gemma model: {e}")
-            logger.error("Ensure 'llama-cpp-python[cuda]' is installed correctly and CUDA drivers are set up.")
             _gemma_llm_instance = None # Reset instance on failure
             raise # Re-raise the exception to indicate failure
 
@@ -87,7 +81,6 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
         full_prompt_parts.append(f"<start_of_turn>user\n{processed_prompt}<end_of_turn>\n<start_of_turn>model\n")
         formatted_prompt = "".join(full_prompt_parts)
 
-        logger.info(f"Running Gemma inference for prompt (max_tokens={max_tokens}, temp={temperature})...")
         with suppress_stdout_stderr():
             output = llm(
                 prompt=formatted_prompt,
@@ -105,14 +98,14 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
             if generated_text.endswith(stop_token):
                 generated_text = generated_text[:-len(stop_token)].strip()
 
-        logger.info("Gemma inference completed.")
         return generated_text
     except Exception as e:
-        logger.error(f"Error during Gemma inference: {e}", exc_info=True)
         return f"Error during Gemma inference: {e}"
 
 # Example usage for testing this module directly
 if __name__ == "__main__":
+    from rich.console import Console
+    console = Console()
     # This block will only run if you execute this file directly (e.g., python gemma_local.py)
     # It demonstrates how to load the model and run an inference.
     try:
@@ -122,13 +115,13 @@ if __name__ == "__main__":
             # Run a sample inference
             sample_prompt = "Tell me a short, funny story about a talking cat."
             response = run_gemma_inference(sample_prompt, max_tokens=150, temperature=0.8)
-            print(f"\n--- Gemma Sample Response ---\nPrompt: {sample_prompt}\nResponse: {response}")
+            console.print(f"\n[bold green]--- Gemma Sample Response ---[/bold green]\n[bold blue]Prompt:[/bold blue] {sample_prompt}\n[bold magenta]Response:[/bold magenta] {response}")
 
             sample_prompt_2 = "Write a simple Python function to reverse a string."
             response_2 = run_gemma_inference(sample_prompt_2, max_tokens=100, temperature=0.5)
-            print(f"\n--- Gemma Sample Response 2 ---\nPrompt: {sample_prompt_2}\nResponse: {response_2}")
+            console.print(f"\n[bold green]--- Gemma Sample Response 2 ---[/bold green]\n[bold blue]Prompt:[/bold blue] {sample_prompt_2}\n[bold magenta]Response:[/bold magenta] {response_2}")
 
     except FileNotFoundError:
-        print("\nSkipping Gemma inference example: Model file not found. Please download it first.")
+        console.print("\n[bold red]Skipping Gemma inference example: Model file not found. Please download it first.[/bold red]")
     except Exception as e:
-        print(f"\nAn unexpected error occurred during example execution: {e}")
+        console.print(f"\n[bold red]An unexpected error occurred during example execution: {e}[/bold red]")

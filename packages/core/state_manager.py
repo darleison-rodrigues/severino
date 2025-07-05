@@ -12,6 +12,7 @@ class StateManager:
         self.session_id = session_id
         self._conversation_history: List[Dict[str, Any]] = []
         self._session_data: Dict[str, Any] = {}
+        # Example session data keys: "gemini_authorized": bool, "vram_usage": float, etc.
         # In a real application, you might load state from a persistent store here
         self._load_state()
 

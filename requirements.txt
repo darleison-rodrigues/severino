@@ -2,3 +2,4 @@ click
 google-generativeai
 llama-cpp-python[cuda]
 python-dotenv
+rich

@@ -29,3 +29,5 @@ data/cache/
 # Environment variables
 .env
 /knowledge
+*egg-info
+/logs

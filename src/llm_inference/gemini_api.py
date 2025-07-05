@@ -8,6 +8,8 @@ from config.settings import (
 from config.logging_config import logger
 from utils.text_processor import TextProcessor
 import json # For parsing structured responses if needed
+from rich.console import Console
+from rich.status import Status
 
 # Configure the Google Generative AI client with your API key.
 # This should be done once at the application's start.
@@ -17,6 +19,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # This model instance will be used for all content generation requests.
 _gemini_model_instance = genai.GenerativeModel(GEMINI_MODEL_NAME)
 _text_processor_instance = TextProcessor() # Initialize TextProcessor globally
+_console = Console() # Initialize Rich Console
 
 def start_gemini_chat_session():
     """
@@ -111,22 +114,22 @@ def generate_content_with_quota_check(prompt: str, max_tokens: int = MAX_GEMINI_
                 logger.info("Gemini API request cancelled by user due to cost warning.")
                 return None
 
-        # 4. Make the API Call
-        logger.info("Sending request to Gemini API...")
-        if chat_session:
-            response = chat_session.send_message(
-                processed_prompt,
-                generation_config={
-                    "max_output_tokens": max_tokens
-                }
-            )
-        else:
-            response = _gemini_model_instance.generate_content(
-                processed_prompt,
-                generation_config={
-                    "max_output_tokens": max_tokens
-                }
-            )
+        # 4. Make the API Call with a spinner
+        with _console.status("[bold green]Processing data with quantum algorithms...[/bold green]", spinner="dots") as status:
+            if chat_session:
+                response = chat_session.send_message(
+                    processed_prompt,
+                    generation_config={
+                        "max_output_tokens": max_tokens
+                    }
+                )
+            else:
+                response = _gemini_model_instance.generate_content(
+                    processed_prompt,
+                    generation_config={
+                        "max_output_tokens": max_tokens
+                    }
+                )
 
         # 5. Process Response
         # Access the text from the response.
