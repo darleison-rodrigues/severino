@@ -1,8 +1,8 @@
 import os
 import sys
 from contextlib import contextmanager
-from llama_cpp import Llama, LlamaGrammar
-from config.settings import GEMMA_MODEL_PATH, N_GPU_LAYERS, N_CTX, N_BATCH
+from llama_cpp import Llama
+from config.settings import N_GPU_LAYERS, N_CTX, N_BATCH
 from config.logging_config import logger
 from utils.text_processor import TextProcessor
 
@@ -21,21 +21,24 @@ def suppress_stdout_stderr():
         finally:
             sys.stdout, sys.stderr = old_stdout, old_stderr
 
-def load_gemma_model():
+def load_gemma_model(model_path: str):
     """
     Loads the Gemma GGUF model into memory and offloads layers to the GPU.
     This function uses a singleton pattern to ensure the model is loaded only once
     across multiple calls.
+
+    Args:
+        model_path (str): The absolute path to the Gemma GGUF model file.
     """
     global _gemma_llm_instance
     if _gemma_llm_instance is None:
-        if not os.path.exists(GEMMA_MODEL_PATH):
-            raise FileNotFoundError(f"Gemma model not found at: {GEMMA_MODEL_PATH}. Please download it.")
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"Gemma model not found at: {model_path}. Please download it.")
 
         try:
             with suppress_stdout_stderr():
                 _gemma_llm_instance = Llama(
-                    model_path=GEMMA_MODEL_PATH,
+                    model_path=model_path,
                     n_gpu_layers=N_GPU_LAYERS, # Number of layers to offload to the GPU
                     n_ctx=N_CTX,               # Context window size
                     n_batch=N_BATCH,           # Batch size for prompt processing
@@ -61,9 +64,9 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
     Returns:
         str: The generated text from the Gemma model, or an error message.
     """
-    llm = load_gemma_model()
+    llm = _gemma_llm_instance # Use the globally loaded instance
     if llm is None:
-        return "Error: Gemma model not loaded. Cannot perform inference."
+        return "Error: Gemma model not loaded. Cannot perform inference. Please load the model first."
 
     try:
         # Gemma instruction-tuned models typically expect a specific chat format.
@@ -105,21 +108,26 @@ def run_gemma_inference(prompt: str, max_tokens: int = 256, temperature: float =
 # Example usage for testing this module directly
 if __name__ == "__main__":
     from rich.console import Console
+    from config.settings import PROJECT_ROOT # Import PROJECT_ROOT for example usage
+
     console = Console()
     # This block will only run if you execute this file directly (e.g., python gemma_local.py)
     # It demonstrates how to load the model and run an inference.
     try:
+        # Define a sample model path for testing
+        sample_model_path = os.path.join(PROJECT_ROOT, "data", "models", "gemma-2b-it.Q4_K_M.gguf")
+
         # Attempt to load the model (will raise FileNotFoundError if not present)
-        model_instance = load_gemma_model()
+        model_instance = load_gemma_model(sample_model_path)
         if model_instance:
             # Run a sample inference
             sample_prompt = "Tell me a short, funny story about a talking cat."
             response = run_gemma_inference(sample_prompt, max_tokens=150, temperature=0.8)
-            console.print(f"\n[bold green]--- Gemma Sample Response ---[/bold green]\n[bold blue]Prompt:[/bold blue] {sample_prompt}\n[bold magenta]Response:[/bold magenta] {response}")
+            console.print(f"\n[bold green]--- Gemma Sample Response ---\n[bold blue]Prompt:[/bold blue] {sample_prompt}\n[bold magenta]Response:[/bold magenta] {response}")
 
             sample_prompt_2 = "Write a simple Python function to reverse a string."
             response_2 = run_gemma_inference(sample_prompt_2, max_tokens=100, temperature=0.5)
-            console.print(f"\n[bold green]--- Gemma Sample Response 2 ---[/bold green]\n[bold blue]Prompt:[/bold blue] {sample_prompt_2}\n[bold magenta]Response:[/bold magenta] {response_2}")
+            console.print(f"\n[bold green]--- Gemma Sample Response 2 ---\n[bold blue]Prompt:[/bold blue] {sample_prompt_2}\n[bold magenta]Response:[/bold magenta] {response_2}")
 
     except FileNotFoundError:
         console.print("\n[bold red]Skipping Gemma inference example: Model file not found. Please download it first.[/bold red]")

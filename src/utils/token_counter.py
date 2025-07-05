@@ -2,8 +2,7 @@
 # While the `google-generativeai` library provides `model.count_tokens()`,
 # you might need custom tokenizers or estimation for other models or specific use cases.
 
-# For Gemini API, direct use of `model.count_tokens` is recommended as it's accurate
-# and free. See `src/llm_inference/gemini_api.py` for its usage.
+# For local LLMs, token counting might be handled by the model's library or require a custom tokenizer.
 
 # Example of a very basic, approximate token counter (not for production LLM use):
 def simple_word_token_estimate(text: str) -> int:

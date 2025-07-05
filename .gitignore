@@ -23,11 +23,12 @@ share/
 *.bak
 
 # Data and Models
-data/models/*.gguf
-data/cache/
+data/
 
 # Environment variables
 .env
 /knowledge
 *egg-info
 /logs
+.severino/
+data/

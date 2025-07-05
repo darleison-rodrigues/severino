@@ -8,8 +8,11 @@ from config.logging_config import logger
 if __name__ == '__main__':
     # Initialize logging for the application.
     # This will ensure logs are written to file and console as configured.
-    
-    # Call the main CLI group defined in src.cli.commands.
-    # Click handles parsing arguments and dispatching to the correct command function.
-    cli()
-    
+    logger.info("Severino CLI started.")
+    try:
+        # Call the main CLI group defined in src.cli.commands.
+        # Click handles parsing arguments and dispatching to the correct command function.
+        cli()
+    except Exception as e:
+        logger.critical(f"An unhandled critical error occurred: {e}", exc_info=True)
+        print("\n[bold red]A critical error occurred. Please check the logs for details.[/bold red]")

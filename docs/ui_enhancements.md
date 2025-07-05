@@ -22,7 +22,7 @@ To provide immediate visual feedback during processing, especially when interact
 
 ### Implementation:
 
-*   **LLM Reasoning:** When the Gemini API is processing a request, a spinner is displayed to indicate that the system is actively thinking. This is implemented in `src/llm_inference/gemini_api.py`.
+*   Implemented using `rich.status.Status` in `src/cli/commands.py`.
 
 ### Example:
 
@@ -36,7 +36,7 @@ Agent responses in the interactive chat mode are prepended with a distinct emoji
 
 ### Implementation:
 
-*   The emoji for agent responses is configured in `src/cli/commands.py`.
+*   The emoji for agent responses is configured in `src/config/settings.py` (`AGENT_EMOJI`).
 
 ### Example:
 
@@ -44,3 +44,7 @@ Agent responses in the interactive chat mode are prepended with a distinct emoji
 You: What is the capital of France?
 🐨 Severino: The capital of France is Paris.
 ```
+
+## Lightweight Multimodal UI (Future)
+
+For features like `severino listen` (voice input), a minimal, non-intrusive UI element will be implemented. This UI will visually indicate active listening, provide real-time transcription preview, and allow for quick activation/deactivation, seamlessly integrating voice input into the CLI workflow.

@@ -1,26 +1,25 @@
 from typing import Any, Dict, List, Optional
 import json
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 class StateManager:
     """
     Manages conversational context and long-running sessions.
-    This can be extended to persist state to a database or file system.
+    This persists state to a JSON file within the .severino directory.
     """
 
     def __init__(self, session_id: str = "default_session"):
         self.session_id = session_id
         self._conversation_history: List[Dict[str, Any]] = []
         self._session_data: Dict[str, Any] = {}
-        # Example session data keys: "gemini_authorized": bool, "vram_usage": float, etc.
-        # In a real application, you might load state from a persistent store here
         self._load_state()
 
     def _load_state(self):
         """
-        Loads the session state from a persistent store (e.g., a JSON file).
-        For simplicity, this example uses a local file. In production, consider
-        Cloudflare D1 or another suitable database.
+        Loads the session state from a persistent store (a JSON file in .severino).
         """
         file_path = self._get_state_file_path()
         if os.path.exists(file_path):
@@ -29,11 +28,11 @@ class StateManager:
                     state = json.load(f)
                     self._conversation_history = state.get("history", [])
                     self._session_data = state.get("data", {})
-                print(f"State loaded for session '{self.session_id}' from {file_path}")
+                logger.info(f"State loaded for session '{self.session_id}' from {file_path}")
             except json.JSONDecodeError:
-                print(f"Warning: Could not decode JSON from state file {file_path}. Starting with empty state.")
+                logger.warning(f"Could not decode JSON from state file {file_path}. Starting with empty state.")
             except Exception as e:
-                print(f"Error loading state: {e}")
+                logger.error(f"Error loading state from {file_path}: {e}", exc_info=True)
 
     def _save_state(self):
         """
@@ -45,17 +44,29 @@ class StateManager:
             "data": self._session_data
         }
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, 'w') as f:
-            json.dump(state, f, indent=2)
-        print(f"State saved for session '{self.session_id}' to {file_path}")
+        try:
+            with open(file_path, 'w') as f:
+                json.dump(state, f, indent=2)
+            logger.info(f"State saved for session '{self.session_id}' to {file_path}")
+        except Exception as e:
+            logger.error(f"Error saving state to {file_path}: {e}", exc_info=True)
 
     def _get_state_file_path(self) -> str:
         """
-        Returns the file path for the session state.
+        Returns the file path for the session state within the .severino directory.
         """
-        # Using a simple 'data' directory for state files
-        # In a real project, this path should be configurable and secure
-        return os.path.join("data", "sessions", f"{self.session_id}.json")
+        # Get the project root dynamically
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
+        
+        # Construct the path to .severino/sessions/
+        severino_dir = os.path.join(project_root, ".severino")
+        sessions_dir = os.path.join(severino_dir, "sessions")
+        
+        # Ensure the .severino/sessions directory exists
+        os.makedirs(sessions_dir, exist_ok=True)
+
+        return os.path.join(sessions_dir, f"{self.session_id}.json")
 
     def add_message(self, role: str, content: str):
         """
@@ -93,10 +104,13 @@ class StateManager:
         self._conversation_history = []
         self._session_data = {}
         self._save_state()
-        print(f"Session '{self.session_id}' cleared.")
+        logger.info(f"Session '{self.session_id}' cleared.")
 
 # Example Usage (for testing purposes)
 if __name__ == "__main__":
+    # Configure basic logging for standalone execution
+    logging.basicConfig(level=logging.INFO, format='%("asctime")s - %(name)s - %(levelname)s - %(message)s')
+
     # Create a StateManager for a specific session
     session_manager = StateManager(session_id="dev_workflow_123")
 
@@ -109,24 +123,24 @@ if __name__ == "__main__":
     session_manager.update_session_data("current_task", "Implement Core Package Foundations")
 
     # Retrieve history and data
-    print("\n--- Conversation History ---")
+    logger.info("\n--- Conversation History ---")
     for msg in session_manager.get_history():
-        print(f"{msg['role']}: {msg['content']}")
+        logger.info(f"{msg['role']}: {msg['content']}")
 
-    print("\n--- Session Data ---")
-    print(f"Project Name: {session_manager.get_session_data("project_name")}")
-    print(f"Current Task: {session_manager.get_session_data("current_task")}")
-    print(f"Non-existent Key: {session_manager.get_session_data("non_existent", "Default Value")}")
+    logger.info("\n--- Session Data ---")
+    logger.info(f"Project Name: {session_manager.get_session_data("project_name")}")
+    logger.info(f"Current Task: {session_manager.get_session_data("current_task")}")
+    logger.info(f"Non-existent Key: {session_manager.get_session_data("non_existent", "Default Value")}")
 
     # Simulate another interaction in the same session
-    print("\n--- Another Interaction ---")
+    logger.info("\n--- Another Interaction ---")
     session_manager.add_message("user", "Can you remind me of the current task?")
-    print(f"Current task from session data: {session_manager.get_session_data("current_task")}")
+    logger.info(f"Current task from session data: {session_manager.get_session_data("current_task")}")
 
     # Clear the session
     # session_manager.clear_session()
 
     # Verify state is cleared (if clear_session was uncommented)
     # new_session_manager = StateManager(session_id="dev_workflow_123")
-    # print("\n--- History after clearing (should be empty) ---")
-    # print(new_session_manager.get_history())
+    # logger.info("--- History after clearing (should be empty) ---")
+    # logger.info(new_session_manager.get_history())

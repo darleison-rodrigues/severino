@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'click',
-        'google-generativeai',
+        
         'llama-cpp-python[cuda]',
         'python-dotenv',
         'psutil',
@@ -24,15 +24,16 @@ setup(
             'severino=src.main:cli', # Corrected entry point
         ],
     },
-    author='Your Name',
+    author='Creator',
     author_email='your.email@example.com',
-    description='A CLI for ML monitoring assistance using Gemma and Gemini.',
+    description='A CLI for ML monitoring assistance using Gemma.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/your-repo/severino',
+    license='Severino Custom Non-Commercial License',
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
+        'License :: Other/Proprietary License', # Custom Non-Commercial License
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',

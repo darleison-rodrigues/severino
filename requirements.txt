@@ -1,5 +1,4 @@
 click
-google-generativeai
-llama-cpp-python[cuda]
+llama-cpp-python
 python-dotenv
 rich

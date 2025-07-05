@@ -5,40 +5,26 @@ from dotenv import load_dotenv
 # This allows for easy management of sensitive information like API keys
 load_dotenv()
 
-# --- API Keys ---
-# Retrieve Gemini API key from environment variables.
-# It's crucial not to hardcode API keys directly in your code.
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY environment variable not set. Please create a .env file or set the variable.")
+# --- Project Root --- 
+# Dynamically determine the project root, assuming this file is within severino/src/config/
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # --- Local Model Paths ---
-# Construct the absolute path to the Gemma GGUF model file.
-# This assumes the model is downloaded into the 'data/models/' directory.
-# Adjust the filename if you download a different Gemma model version or quantization.
-GEMMA_MODEL_FILENAME = "gemma-2b-it.Q4_K_M.gguf"
-GEMMA_MODEL_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), # Go up to the project root (severino/)
-    "data", "models", GEMMA_MODEL_FILENAME
+# Default Gemma model filename. This model should be placed in data/models/.
+DEFAULT_GEMMA_MODEL_FILENAME = "gemma-2b-it.Q4_K_M.gguf"
+
+# Default path to the Gemma GGUF model file for development purposes.
+# This assumes the model is downloaded into the 'data/models/' directory
+# relative to the project root.
+DEFAULT_GEMMA_MODEL_PATH = os.path.join(
+    PROJECT_ROOT,
+    "data", "models", DEFAULT_GEMMA_MODEL_FILENAME
 )
 
-# Optional: Check if the model file exists (useful for warnings)
-if not os.path.exists(GEMMA_MODEL_PATH):
-    print(f"Warning: Gemma model not found at {GEMMA_MODEL_PATH}. Local inference might fail until downloaded.")
-
-# --- LLM Settings ---
-# Default Gemini model to use for API calls.
-# 'gemini-1.5-pro' offers high quality, 'gemini-1.5-flash' is faster and cheaper.
-GEMINI_MODEL_NAME = "gemini-1.5-pro"
-
-# Default maximum output tokens for Gemini API generation.
-# This helps control cost and response length.
-MAX_GEMINI_OUTPUT_TOKENS = 1000
-
-# Cost warning threshold for Gemini API calls in USD.
-# If an estimated request cost exceeds this, the user will be warned.
-# Adjust this based on your budget and Gemini API pricing (check official docs for current rates).
-GEMINI_COST_WARNING_THRESHOLD_USD = 0.05 # Example: $0.05 per request
+# --- LLM Settings (Gemma Local) ---
+# Default maximum output tokens for Gemma local generation.
+# This helps control response length.
+MAX_GEMMA_OUTPUT_TOKENS = 1000
 
 # --- llama-cpp-python specific settings for Gemma local inference ---
 # N_GPU_LAYERS: Number of layers to offload to the GPU.
@@ -54,9 +40,14 @@ N_CTX = 8192
 # Larger batches can improve throughput but use more VRAM.
 N_BATCH = 512
 
+# --- UI Settings ---
+# Emoji to prepend to agent responses in chat.
+# Can be any valid emoji character.
+AGENT_EMOJI = "🐨"
+
 # --- Logging Settings ---
 LOG_LEVEL = os.getenv("LOG_LEVEL", "CRITICAL").upper() # Default to CRITICAL to suppress most logs
 LOG_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    PROJECT_ROOT,
     "logs", "severino.log"
 )

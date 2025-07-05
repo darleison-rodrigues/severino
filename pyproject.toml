@@ -8,12 +8,13 @@ version = "0.1.0"
 authors = [
   { name="Your Name", email="your.email@example.com" },
 ]
-description = "A CLI for ML monitoring assistance using Gemma and Gemini."
+description = "A CLI for ML monitoring assistance using Gemma."
 readme = "README.md"
 requires-python = ">=3.9"
+license = { file = "LICENSE" }
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License", # Or your chosen license
+    "License :: Other/Proprietary License", # Custom Non-Commercial License
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -21,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "click",
-    "google-generativeai",
+    
     "llama-cpp-python[cuda]", # Ensure CUDA toolkit is installed for this
     "python-dotenv",
     "psutil", # For resource monitoring
