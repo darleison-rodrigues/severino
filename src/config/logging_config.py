@@ -21,7 +21,7 @@ def setup_logging():
     if not logger.handlers:
         # File handler
         file_handler = logging.FileHandler(LOG_FILE)
-        file_handler.setLevel(LOG_LEVEL)
+        file_handler.setLevel(logging.INFO) # Always log INFO and above to file
         file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
@@ -29,7 +29,7 @@ def setup_logging():
         # Console handler with Rich
         console = Console()
         rich_handler = RichHandler(
-            level=LOG_LEVEL,
+            level=logging.WARNING, # Only show WARNING and above on console
             console=console,
             show_time=True,
             show_level=True,
@@ -59,4 +59,3 @@ if __name__ == "__main__":
     logger.warning("⚠️ [bold yellow]Anomaly[/bold yellow] detected! This is a warning message.")
     logger.error("🔥 [bold red]Critical failure[/bold red]! This is an error message.")
     logger.critical("💀 [bold magenta]System meltdown[/bold magenta]! This is a critical message.")
-

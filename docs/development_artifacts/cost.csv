@@ -1,0 +1,11 @@
+Device,Category,Estimated Cost (USD),Notes
+NVIDIA Jetson Orin Nano 8GB,Edge AI,499,High-performance edge computing
+NVIDIA Jetson Nano 4GB,Edge AI,149,Entry-level edge computing
+Raspberry Pi 5 8GB,SBC,80,General purpose computing, prototyping
+ESP32 Dev Kit,Microcontroller,10,IoT, sensor data, basic control
+NVIDIA GeForce RTX 4070,Development/Simulation,599,Primary development GPU, high-performance LLM inference
+Power Supply,Accessory,20,Per device
+SD Card/Storage,Accessory,15,Per device
+Enclosure,Accessory,25,Per device
+Development Software Licenses,Software,0,Assumed open-source/free tier
+Cloud Inference (per hour),Service,0.50,Placeholder for potential cloud LLM usage

@@ -1,6 +1,6 @@
-# Severino CLI: The Intelligent Developer's Orchestrator
+# Severino CLI: The Indispensable Orchestrator for High-Performance Development
 
-Severino is a specialized, intelligent command-line interface designed for developers. It augments your terminal experience with targeted multimodal interactions and a cognitive architecture for interpretable ML monitoring. Severino's core value lies in its ability to execute complex tasks through intelligent tool chaining, provide real-time insights into ML systems, and offer a seamless, performant user experience without feature bloat.
+Severino is not just a command-line interface; it's a strategic imperative for organizations demanding peak efficiency, unparalleled insight, and scalable operations in their software and ML development lifecycles. We deliver immediate, measurable value by transforming complex workflows into streamlined, intelligent processes.
 
 ## IMPORTANT LICENSE NOTICE
 
@@ -12,93 +12,112 @@ This software is licensed under the **Severino Custom Non-Commercial License**. 
 
 For commercial licensing inquiries or to obtain a commercial license, please contact the Creator at [your.email@example.com].
 
-## Core Pillars of Severino
+## Core Pillars of Unrivaled Value:
 
-### 1. Command-Centric Intelligence
+### 1. Command-Centric Intelligence: Accelerating Development Velocity
 
-Severino interprets natural language requests and translates them into precise sequences of tool commands. It understands context, anticipates needs, and proactively suggests or executes the most efficient toolchain to achieve the user's goal. The primary mode of interaction remains command-line driven, where users issue commands, and Severino leverages its internal intelligence (powered by Gemma) to select, configure, and execute the appropriate tools (file system operations, shell commands, custom scripts, etc.). For conversational clarification or general queries, Severino maintains a rich, text-based chat experience directly within the terminal, leveraging `rich` for enhanced readability and feedback.
+Severino translates natural language intent into precise, optimized sequences of tool commands. This isn't mere scripting; it's intelligent orchestration that anticipates needs, minimizes manual intervention, and drastically reduces development cycles. Our command-line driven interface ensures absolute control and transparency, eliminating the ambiguity of conversational AI while leveraging advanced intelligence (powered by Gemma) to select, configure, and execute the most efficient toolchains (file system, shell, custom scripts). A rich, terminal-native chat experience provides instant clarification and feedback, ensuring developers remain in their flow, maximizing productivity.
 
-### 2. Targeted Multimodal Access with Lightweight UI
+### 2. Cognitive ML Monitoring: Unlocking Actionable Insights & Mitigating Risk
 
-Severino's multimodal capabilities are focused and performant. The `severino listen` command is its primary multimodal entry point, activating a **minimal, non-intrusive UI element** that visually indicates active listening and provides real-time transcription preview. Once voice input is complete, the UI disappears, and the transcribed text is seamlessly fed into Severino's command processing pipeline. Other complex tooling or functions might trigger similarly lightweight, ephemeral UI components (e.g., for interactive configuration or brief visual summaries).
+Leveraging principles from cognitive architectures, Severino acts as an intelligent ML monitoring agent. It ingests raw monitoring data (e.g., drift reports, performance metrics from edge devices) and uses Gemma to process this data, providing human-readable, actionable insights and recommendations. This enables proactive oversight of ML systems, preventing costly failures and ensuring model integrity.
 
-### 3. Cognitive ML Monitoring (Future Integration)
+### 3. Targeted Multimodal Access with Lightweight UI: Enhancing Efficiency, Not Distraction
 
-Leveraging principles from cognitive architectures, Severino aims to act as an intelligent ML monitoring agent. It will ingest raw monitoring data (e.g., drift reports, performance metrics from edge devices) and use Gemma to process this data, providing human-readable, actionable insights and recommendations. This enables proactive oversight of ML systems.
+Severino's multimodal capabilities are focused and performant. The `severino listen` command is its primary multimodal entry point, activating a **minimal, non-intrusive UI element** that visually indicates active listening and provides real-time transcription preview. Once voice input is complete, the UI disappears, and the transcribed text is seamlessly fed into Severino's command processing pipeline. Other complex tooling or functions might trigger similarly lightweight, ephemeral UI components (e.g., for interactive configuration or brief visual summaries), preserving focus and maximizing developer flow.
 
-### 4. Lightweight & Performant by Design
+### 4. Lightweight & Performant by Design: Maximizing ROI, Minimizing Overhead
 
-Severino prioritizes local Gemma inference for core intelligence, ensuring privacy and minimizing latency. UI elements are designed to be ephemeral and consume minimal system resources, ensuring Severino remains responsive and doesn't interfere with the developer's primary workflow.
+Severino prioritizes local Gemma inference for core intelligence, ensuring data privacy, minimizing latency, and reducing reliance on costly cloud services. UI elements are designed to be ephemeral and consume negligible system resources, guaranteeing Severino remains responsive and never interferes with critical development workflows.
 
-## Functional Features
+## Functional Features: Driving Tangible Results
 
-### Core CLI Capabilities
+### Core CLI Capabilities: Streamlining Your Workflow
 
-*   **Intelligent Input Processing:** Understands and parses user commands, including natural language prompts, to determine intent and orchestrate actions.
-*   **Conversational Context Management:** Maintains conversation history to provide context-aware responses and support long-running sessions.
-*   **Dynamic Tool Execution:** Executes a wide range of tools, both local and remote, based on user requests or AI-driven decisions.
-*   **Secure Operations:** Implements a robust mechanism for user confirmation before executing sensitive commands that might modify the system or data.
-*   **Extensible Architecture:** Designed for easy integration of new tools and services.
+*   **Intelligent Input Processing:** Understands and parses user commands, including natural language prompts, to determine intent and orchestrate actions, accelerating task completion.
+*   **Conversational Context Management:** Maintains conversation history to provide context-aware responses and support long-running sessions, boosting efficiency and reducing rework.
+*   **Dynamic Tool Execution:** Executes a wide range of tools, both local and remote, based on user requests or AI-driven decisions, expanding your operational reach.
+*   **Secure Operations:** Implements a robust mechanism for user confirmation before executing sensitive commands that might modify the system or data, ensuring data integrity and peace of mind.
+*   **Extensible Architecture:** Designed for easy integration of new tools and services, future-proofing your investment.
 
-### AI Integration
+### AI Integration: Unleashing Advanced Intelligence
 
-*   **Local LLM Inference (Gemma):** Supports local execution of large language models (e.g., Gemma GGUF models) for offline capabilities and reduced cloud dependency.
-*   **Prompt Construction & Management:** Dynamically builds and refines prompts for LLMs, incorporating conversational history and tool definitions.
-*   **Text Processing & Feature Engineering:** Cleans and normalizes text inputs for consistent and high-quality LLM interactions, applying rules for robust data handling.
+*   **Local LLM Inference (Gemma):** Supports local execution of large language models (e.g., Gemma GGUF models) for offline capabilities, enhanced data privacy, and reduced cloud dependency, optimizing costs and security.
+*   **Prompt Construction & Management:** Dynamically builds and refines prompts for LLMs, incorporating conversational history and tool definitions, ensuring highly accurate and relevant AI responses.
+*   **Text Processing & Feature Engineering:** Cleans and normalizes text inputs for consistent and high-quality LLM interactions, applying rules for robust data handling, maximizing AI effectiveness.
 
-### Tool Management System
+### Tool Management System: Orchestrating Your Development Ecosystem
 
-The CLI features a `ToolManager` responsible for registering, discovering, and orchestrating the execution of various tools.
+The CLI features a `ToolManager` responsible for registering, discovering, and orchestrating the execution of various tools, transforming your development environment into a cohesive, intelligent ecosystem.
 
-*   **Tool Registration:** Tools are defined with clear specifications (name, description, parameters, expected returns, side effects, security context).
-*   **Dynamic Discovery:** New tools can be registered at runtime, allowing for flexible expansion of CLI capabilities.
-*   **Intelligent Tool Selection & Chaining:** The AI can select the most appropriate tool(s) for a given task and chain multiple tool calls to achieve complex goals.
-*   **Tool Adapters:** Generic adapters enable interaction with diverse environments, including local shell commands and remote APIs.
+*   **Tool Registration:** Tools are defined with clear specifications (name, description, parameters, expected returns, side effects, security context), ensuring precise and predictable operations.
+*   **Dynamic Discovery:** New tools can be registered at runtime, allowing for flexible expansion of CLI capabilities, adapting to your evolving needs.
+*   **Intelligent Tool Selection & Chaining:** The AI can select the most appropriate tool(s) for a given task and chain multiple tool calls to achieve complex goals, automating intricate workflows.
+*   **Tool Adapters:** Generic adapters enable seamless interaction with diverse environments, including local shell commands and remote APIs, unifying your toolchain.
 
-## Command-Line Interface (CLI) Commands
+## Command-Line Interface (CLI) Commands: Direct Control, Maximum Impact
 
-The Severino CLI provides a set of commands for direct interaction and leverages natural language processing for more intuitive control.
+The Severino CLI provides a set of commands for direct interaction and leverages natural language processing for more intuitive control, putting powerful capabilities at your fingertips.
 
-### General Interaction
+### General Interaction: Intuitive and Powerful
 
-*   `severino <your_natural_language_prompt>`: The primary way to interact. Describe what you want to achieve, and Severino will interpret your request, potentially executing tools or providing information.
+*   `severino <your_natural_language_prompt>`: The primary way to interact. Describe what you want to achieve, and Severino will interpret your request, potentially executing tools or providing information, accelerating your workflow.
     *   **Example:** `severino "Summarize the main points of the file at /docs/project_plan.md"`
     *   **Example:** `severino "What is the current status of the 'core package foundations' task?"`
 
-### Direct Tool Execution
+### Direct Tool Execution: Precision and Efficiency
 
-For specific, direct actions, you can invoke tools explicitly.
+For specific, direct actions, you can invoke tools explicitly, ensuring rapid execution of critical tasks.
 
-*   `severino read <file_path>`: Reads and displays the content of a specified file.
+*   `severino read <file_path>`: Reads and displays the content of a specified file, providing instant access to information.
     *   **Example:** `severino read /home/user/config.json`
-*   `severino shell <command>`: Executes a shell command. **Requires user confirmation for potentially destructive commands.**
+*   `severino shell <command>`: Executes a shell command. **Requires user confirmation for potentially destructive commands, ensuring security and control.**
     *   **Example:** `severino shell "ls -la"`
     *   **Example:** `severino shell "git status"`
 
-### Configuration Management
+### Configuration Management: Streamlined Control
 
-Manage Severino's settings and API keys.
+Manage Severino's settings and API keys with ease, ensuring optimal performance and security.
 
-*   `severino config set <key> <value>`: Sets a configuration value (e.g., API keys, default model).
+*   `severino config set <key> <value>`: Sets a configuration value (e.g., API keys, default model), enabling rapid customization.
     
-*   `severino config show`: Displays the current configuration settings.
+*   `severino config show`: Displays the current configuration settings, providing transparency and control.
 
-### Session & History Management
+### Session & History Management: Contextual Awareness for Enhanced Productivity
 
-Control conversational context.
+Control conversational context, ensuring Severino always understands your needs.
 
 *   `severino chat`: Enters an interactive chat mode for continuous conversation. This mode features:
-    *   **Rich Terminal Output:** Colored text for user input, agent responses, and system messages.
-    *   **Loading Spinners:** Visual feedback while the LLM is processing.
-    *   **Emoji Responses:** Agent responses are prepended with a distinctive emoji (e.g., :hatching-egg:).
+    *   **Rich Terminal Output:** Colored text for user input, agent responses, and system messages, enhancing readability and comprehension.
+    *   **Loading Spinners:** Visual feedback while the LLM is processing, keeping you informed.
+    *   **Emoji Responses:** Agent responses are prepended with a distinctive emoji (e.g., :hatching-egg:), adding a touch of personality.
     
-*   `severino history show [limit]`: Displays recent conversational history.
-*   `severino history clear`: Clears the current session's conversation history.
+*   `severino history show [limit]`: Displays recent conversational history, providing valuable context.
+*   `severino history clear`: Clears the current session's conversation history, allowing for fresh starts.
 
-### Diagnostics & Health Checks
+### UI Integration: Visualizing Insights
 
-*   `severino self-diagnose`: Checks the health and connectivity of internal components and integrated external services. Provides actionable insights for troubleshooting.
+*   `severino code [path]`: Starts the UI and begins building a knowledge graph of the codebase at the specified path (defaults to current directory), providing visual insights into your project.
 
-## Getting Started
+### Diagnostics & Health Checks: Ensuring Operational Excellence
 
-To begin using Severino, ensure you have Python installed. You can then install the necessary dependencies and configure your API keys. Detailed installation instructions will be provided in the full documentation.
+*   `severino self-diagnose`: Checks the health and connectivity of internal components and integrated external services. Provides actionable insights for troubleshooting, minimizing downtime.
+*   `severino status`: Displays the current status of the application, giving you real-time operational awareness.
+
+## Getting Started: Unlock Severino's Power Today
+
+To begin transforming your development workflow with Severino, ensure you have Python installed. You can then install the necessary dependencies and configure your API keys. Detailed installation instructions will be provided in the full documentation.
+
+## Development: Contribute to the Future of Intelligent Development
+
+This project uses `pyproject.toml` to manage dependencies. To install the dependencies, run:
+
+```bash
+pip install -e .
+```
+
+To run the tests, use:
+
+```bash
+python -m unittest discover tests
+```

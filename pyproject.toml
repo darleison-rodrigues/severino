@@ -22,18 +22,25 @@ classifiers = [
 ]
 dependencies = [
     "click",
-    
-    "llama-cpp-python[cuda]", # Ensure CUDA toolkit is installed for this
+    "llama-cpp-python",
     "python-dotenv",
-    "psutil", # For resource monitoring
+    "psutil",
+    "rich",
+    "flask", # Added for API functionality
+    "faiss-cpu", # For efficient vector search
+    "sentence-transformers", # For generating embeddings
 ]
+
+[project.optional-dependencies]
+cuda = ["llama-cpp-python[cuda]"]
+dev = ["pytest"]
 
 [project.urls]
 "Homepage" = "https://github.com/your-repo/severino" # Replace with your actual repo
 "Bug Tracker" = "https://github.com/your-repo/severino/issues" # Replace with your actual repo
 
 [project.scripts]
-severino = "main:cli" # This makes 'severino' command available after pip install
+severino = "src.main:cli"
 
 [tool.setuptools.packages.find]
-where = ["src"] # Search for packages in the 'src' directory
+where = ["src"]

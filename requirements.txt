@@ -1,4 +1,0 @@
-click
-llama-cpp-python
-python-dotenv
-rich
